@@ -1,0 +1,37 @@
+services:
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: payment-microservice-blue
+    ports:
+      - "127.0.0.1:3468:3468"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3468
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - DB_HOST=${DB_HOST:-db-server-postgres}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_USER=${DB_USER:-dbadmin}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME:-payments}
+      - DB_SYNC=${DB_SYNC:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOGGING_SERVICE_URL=${LOGGING_SERVICE_URL:-http://logging-microservice:3268}
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - nginx-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3468/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  nginx-network:
+    external: true
+
