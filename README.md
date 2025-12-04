@@ -155,16 +155,91 @@ Returns service health status.
 
 ### Environment Variables
 
-See `.env.example` for all required environment variables.
+**Important**: The `.env` file is the single source of truth for all configuration. All hardcoded values have been replaced with environment variables.
 
-Key variables:
+See `.env.example` for all required environment variable names (keys only, no values).
 
-- `PORT` - Service port (default: 3468)
-- `DB_HOST` - Database host (default: db-server-postgres)
-- `DB_NAME` - Database name (default: payments)
-- `LOGGING_SERVICE_URL` - Logging microservice URL
-- Payment provider credentials (PayPal, Stripe, PayU, Fio Banka, ComGate)
+#### Service Configuration
+
+- `SERVICE_PORT` - Internal service port (default: 3468)
+- `PORT_BLUE` - Blue deployment external port (default: 3369)
+- `PORT_GREEN` - Green deployment external port (default: 3369)
+- `NODE_ENV` - Node environment (production/development)
+- `SERVICE_NAME` - Service name identifier
+
+#### Database Configuration
+
+- `DB_HOST` - Database host (required, no default)
+- `DB_PORT` - Database port (default: 5432)
+- `DB_USER` - Database user (required, no default)
+- `DB_PASSWORD` - Database password (required, no default)
+- `DB_NAME` - Database name (required, no default)
+- `DB_SYNC` - TypeORM synchronize option (true/false)
+
+#### Docker Configuration
+
+- `NGINX_NETWORK_NAME` - Docker network name (default: nginx-network)
+- `DOCKER_VOLUME_BASE_PATH` - Base path for Docker volumes (default: /srv/storagebox/statex/docker-volumes)
+
+#### Service URLs
+
+- `API_URL` - API gateway URL
+- `FRONTEND_URL` - Frontend URL
+- `CORS_ORIGIN` - CORS allowed origin
+- `LOGGING_SERVICE_URL` - External logging service URL
+- `LOGGING_SERVICE_INTERNAL_URL` - Internal logging service URL (default: <http://logging-microservice:3268>)
+- `NOTIFICATION_SERVICE_URL` - Notification service URL
+- `AUTH_SERVICE_URL` - Authentication service URL
+
+#### Payment Provider Configuration
+
+**PayU:**
+
+- `PAYU_MERCHANT_ID` - PayU merchant ID
+- `PAYU_POS_ID` - PayU POS ID
+- `PAYU_CLIENT_ID` - PayU client ID
+- `PAYU_CLIENT_SECRET` - PayU client secret
+- `PAYU_API_URL` - PayU API URL
+- `PAYU_API_URL_PRODUCTION` - PayU production API URL (default: <https://secure.payu.com>)
+- `PAYU_API_URL_SANDBOX` - PayU sandbox API URL (default: <https://secure.snd.payu.com>)
+- `PAYU_SANDBOX` - Enable PayU sandbox mode (true/false)
+
+**ComGate:**
+
+- `COMGATE_MERCHANT_ID` - ComGate merchant ID
+- `COMGATE_SECRET_KEY` - ComGate secret key
+- `COMGATE_TEST_MODE` - ComGate test mode (true/false)
+- `COMGATE_API_URL` - ComGate API base URL (default: <https://payments.comgate.cz/v1.0>)
+- `COMGATE_REDIRECT_BASE_URL` - ComGate redirect base URL (default: <https://payments.comgate.cz/v1.0>)
+
+**Fio Banka:**
+
+- `FIO_BANKA_API_KEY` - Fio Banka API key
+- `FIO_BANKA_ACCOUNT_NUMBER` - Fio Banka account number
+- `FIO_BANKA_API_URL` - Fio Banka API base URL (default: <https://www.fio.cz/ib_api/rest>)
+- `QR_CODE_API_URL` - QR code generation API URL (default: <https://api.qrserver.com/v1/create-qr-code>)
+
+**PayPal:**
+
+- `PAYPAL_CLIENT_ID` - PayPal client ID
+- `PAYPAL_CLIENT_SECRET` - PayPal client secret
+- `PAYPAL_MODE` - PayPal mode (sandbox/live)
+
+**Stripe:**
+
+- `STRIPE_SECRET_KEY` - Stripe secret key
+- `STRIPE_PUBLISHABLE_KEY` - Stripe publishable key
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook secret
+
+#### Security
+
 - `API_KEYS` - Comma-separated list of valid API keys
+- `JWT_SECRET` - JWT secret key
+- `JWT_EXPIRES_IN` - JWT expiration time
+
+#### Logging
+
+- `LOG_LEVEL` - Log level (debug/info/warn/error)
 
 ## Deployment
 

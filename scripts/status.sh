@@ -24,9 +24,10 @@ fi
 # Check health endpoint
 echo ""
 echo "🏥 Health Check:"
-if docker exec payment-microservice wget --quiet --tries=1 --spider http://localhost:3468/health 2>/dev/null; then
+SERVICE_PORT="${SERVICE_PORT:-3468}"
+if docker exec payment-microservice wget --quiet --tries=1 --spider "http://localhost:${SERVICE_PORT}/health" 2>/dev/null; then
   echo "✅ Health endpoint is responding"
-  docker exec payment-microservice wget -qO- http://localhost:3468/health | jq . 2>/dev/null || docker exec payment-microservice wget -qO- http://localhost:3468/health
+  docker exec payment-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health" | jq . 2>/dev/null || docker exec payment-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health"
 else
   echo "❌ Health endpoint is not responding"
 fi

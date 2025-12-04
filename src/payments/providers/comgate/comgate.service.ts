@@ -31,9 +31,7 @@ export class ComGateService implements PaymentProvider {
     this.merchantId = this.configService.get<string>('COMGATE_MERCHANT_ID') || '';
     this.secretKey = this.configService.get<string>('COMGATE_SECRET_KEY') || '';
     this.testMode = this.configService.get<string>('COMGATE_TEST_MODE') === 'true';
-    this.baseUrl = this.testMode
-      ? 'https://payments.comgate.cz/v1.0'
-      : 'https://payments.comgate.cz/v1.0';
+    this.baseUrl = this.configService.get<string>('COMGATE_API_URL') || 'https://payments.comgate.cz/v1.0';
   }
 
   private generateHash(params: Record<string, any>): string {
@@ -79,9 +77,10 @@ export class ComGateService implements PaymentProvider {
         throw new Error(`ComGate error: ${responseData.message}`);
       }
 
+      const redirectBaseUrl = this.configService.get<string>('COMGATE_REDIRECT_BASE_URL') || this.baseUrl;
       return {
         paymentId: responseData.transId,
-        redirectUrl: `https://payments.comgate.cz/v1.0/redirect?transId=${responseData.transId}`,
+        redirectUrl: `${redirectBaseUrl}/redirect?transId=${responseData.transId}`,
         status: 'PENDING',
         providerTransactionId: responseData.transId,
       };

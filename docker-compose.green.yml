@@ -5,33 +5,33 @@ services:
       dockerfile: Dockerfile
     container_name: payment-microservice-green
     ports:
-      - "127.0.0.1:3469:3468"
+      - "127.0.0.1:${PORT_GREEN:-3369}:${SERVICE_PORT:-3468}"
     env_file:
       - .env
     environment:
       - NODE_ENV=production
-      - PORT=3468
+      - PORT=${SERVICE_PORT:-3468}
       - CORS_ORIGIN=${CORS_ORIGIN:-*}
-      - DB_HOST=${DB_HOST:-db-server-postgres}
-      - DB_PORT=${DB_PORT:-5432}
-      - DB_USER=${DB_USER:-dbadmin}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME:-payments}
+      - DB_NAME=${DB_NAME}
       - DB_SYNC=${DB_SYNC:-false}
       - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOGGING_SERVICE_URL=${LOGGING_SERVICE_URL:-http://logging-microservice:3268}
+      - LOGGING_SERVICE_URL=${LOGGING_SERVICE_INTERNAL_URL:-http://logging-microservice:3268}
     volumes:
-      - /srv/storagebox/statex/docker-volumes/payment-microservice/logs:/app/logs
+      - ${DOCKER_VOLUME_BASE_PATH:-/srv/storagebox/statex/docker-volumes}/payment-microservice/logs:/app/logs
     networks:
-      - nginx-network
+      - ${NGINX_NETWORK_NAME:-nginx-network}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3468/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:${SERVICE_PORT:-3468}/health"]
       interval: 30s
       timeout: 10s
       retries: 3
 
 networks:
-  nginx-network:
+  ${NGINX_NETWORK_NAME:-nginx-network}:
     external: true
 

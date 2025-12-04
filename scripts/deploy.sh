@@ -33,11 +33,12 @@ sleep 5
 
 # Health check
 echo "🏥 Checking service health..."
+SERVICE_PORT="${SERVICE_PORT:-3468}"
 MAX_RETRIES=10
 RETRY_COUNT=0
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-  if docker exec payment-microservice wget --quiet --tries=1 --spider http://localhost:3468/health 2>/dev/null; then
+  if docker exec payment-microservice wget --quiet --tries=1 --spider "http://localhost:${SERVICE_PORT}/health" 2>/dev/null; then
     echo "✅ Service is healthy!"
     break
   fi

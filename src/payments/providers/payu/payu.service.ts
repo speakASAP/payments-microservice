@@ -36,8 +36,8 @@ export class PayUService implements PaymentProvider {
     this.merchantId = this.configService.get<string>('PAYU_MERCHANT_ID') || '';
     this.sandbox = this.configService.get<string>('PAYU_SANDBOX') === 'true';
     this.baseUrl = this.sandbox
-      ? 'https://secure.snd.payu.com'
-      : 'https://secure.payu.com';
+      ? (this.configService.get<string>('PAYU_API_URL_SANDBOX') || 'https://secure.snd.payu.com')
+      : (this.configService.get<string>('PAYU_API_URL_PRODUCTION') || 'https://secure.payu.com');
   }
 
   private generateSignature(params: Record<string, any>): string {

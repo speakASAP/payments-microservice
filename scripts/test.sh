@@ -13,7 +13,8 @@ cd "$PROJECT_DIR"
 echo "🧪 Testing Payment Microservice"
 echo "=================================="
 
-BASE_URL="http://localhost:3468"
+SERVICE_PORT="${SERVICE_PORT:-3468}"
+BASE_URL="http://localhost:${SERVICE_PORT}"
 API_KEY="${API_KEY:-test-api-key}"
 
 # Health check

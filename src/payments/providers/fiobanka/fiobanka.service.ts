@@ -19,7 +19,7 @@ import {
 export class FioBankaService implements PaymentProvider {
   private readonly apiKey: string;
   private readonly accountNumber: string;
-  private readonly baseUrl = 'https://www.fio.cz/ib_api/rest';
+  private readonly baseUrl: string;
 
   constructor(
     private configService: ConfigService,
@@ -28,6 +28,7 @@ export class FioBankaService implements PaymentProvider {
   ) {
     this.apiKey = this.configService.get<string>('FIO_BANKA_API_KEY') || '';
     this.accountNumber = this.configService.get<string>('FIO_BANKA_ACCOUNT_NUMBER') || '';
+    this.baseUrl = this.configService.get<string>('FIO_BANKA_API_URL') || 'https://www.fio.cz/ib_api/rest';
   }
 
   async createPayment(request: CreatePaymentRequest): Promise<CreatePaymentResponse> {
@@ -68,7 +69,8 @@ export class FioBankaService implements PaymentProvider {
     const spayd = `SPD*1.0*ACC:${paymentData.accountTo}*AM:${paymentData.amount}*CC:${paymentData.currency}*MSG:${paymentData.message}*VS:${paymentData.variableSymbol}`;
 
     // In production, use a QR code generation library
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(spayd)}`;
+    const qrCodeApiUrl = this.configService.get<string>('QR_CODE_API_URL') || 'https://api.qrserver.com/v1/create-qr-code';
+    const qrCodeUrl = `${qrCodeApiUrl}/?size=300x300&data=${encodeURIComponent(spayd)}`;
 
     return {
       qrCodeUrl,
