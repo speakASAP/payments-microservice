@@ -1,3 +1,5 @@
+*backup*
+*bck*
 node_modules
 dist
 logs
@@ -6,4 +8,3 @@ logs
 !.env.example
 .DS_Store
 *.tsbuildinfo
-
