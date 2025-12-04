@@ -29,9 +29,8 @@ RUN npm ci --only=production
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
-# Expose port (default: 3468, can be overridden via ARG)
-ARG SERVICE_PORT=3468
-EXPOSE ${SERVICE_PORT}
+# Expose port (default: 3468, configured via SERVICE_PORT env var)
+EXPOSE ${SERVICE_PORT:-3468}
 
 # Start application
 CMD ["node", "dist/src/main.js"]

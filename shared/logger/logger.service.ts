@@ -13,6 +13,7 @@ import * as path from 'path';
 export class LoggerService implements NestLoggerService {
   private logDir: string;
   private loggingServiceUrl: string | undefined;
+  private loggingServiceApiPath: string;
   private readonly serviceName = 'payment-microservice';
   private readonly httpTimeout = 5000; // 5 seconds
 
@@ -24,7 +25,8 @@ export class LoggerService implements NestLoggerService {
     if (!fs.existsSync(this.logDir)) {
       fs.mkdirSync(this.logDir, { recursive: true });
     }
-    this.loggingServiceUrl = process.env.LOGGING_SERVICE_URL;
+    this.loggingServiceUrl = process.env.LOGGING_SERVICE_URL || process.env.LOGGING_SERVICE_INTERNAL_URL;
+    this.loggingServiceApiPath = process.env.LOGGING_SERVICE_API_PATH || '/api/logs';
   }
 
   private formatTimestamp(): string {
@@ -66,7 +68,7 @@ export class LoggerService implements NestLoggerService {
 
       // Send to logging service (non-blocking, fire-and-forget)
       firstValueFrom(
-        this.httpService.post(`${this.loggingServiceUrl}/api/logs`, logPayload, {
+        this.httpService.post(`${this.loggingServiceUrl}${this.loggingServiceApiPath}`, logPayload, {
           timeout: this.httpTimeout,
           headers: {
             'Content-Type': 'application/json',

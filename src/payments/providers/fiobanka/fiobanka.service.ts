@@ -20,6 +20,8 @@ export class FioBankaService implements PaymentProvider {
   private readonly apiKey: string;
   private readonly accountNumber: string;
   private readonly baseUrl: string;
+  private readonly dateRangeStart: string;
+  private readonly dateRangeEnd: string;
 
   constructor(
     private configService: ConfigService,
@@ -29,6 +31,10 @@ export class FioBankaService implements PaymentProvider {
     this.apiKey = this.configService.get<string>('FIO_BANKA_API_KEY') || '';
     this.accountNumber = this.configService.get<string>('FIO_BANKA_ACCOUNT_NUMBER') || '';
     this.baseUrl = this.configService.get<string>('FIO_BANKA_API_URL') || 'https://www.fio.cz/ib_api/rest';
+    // Default to current year if not specified
+    const currentYear = new Date().getFullYear();
+    this.dateRangeStart = this.configService.get<string>('FIO_BANKA_DATE_RANGE_START') || `${currentYear}-01-01`;
+    this.dateRangeEnd = this.configService.get<string>('FIO_BANKA_DATE_RANGE_END') || `${currentYear}-12-31`;
   }
 
   async createPayment(request: CreatePaymentRequest): Promise<CreatePaymentResponse> {
@@ -83,7 +89,7 @@ export class FioBankaService implements PaymentProvider {
       // Fio Banka API call to check payment status
       // This would check the account statement for the payment
       const response = await firstValueFrom(
-        this.httpService.get(`${this.baseUrl}/periods/${this.apiKey}/2024-01-01/2024-12-31/transactions.json`, {
+        this.httpService.get(`${this.baseUrl}/periods/${this.apiKey}/${this.dateRangeStart}/${this.dateRangeEnd}/transactions.json`, {
           headers: {
             'Content-Type': 'application/json',
           },

@@ -187,7 +187,7 @@ See `.env.example` for all required environment variable names (keys only, no va
 - `FRONTEND_URL` - Frontend URL
 - `CORS_ORIGIN` - CORS allowed origin
 - `LOGGING_SERVICE_URL` - External logging service URL
-- `LOGGING_SERVICE_INTERNAL_URL` - Internal logging service URL (default: <http://logging-microservice:3268>)
+- `LOGGING_SERVICE_INTERNAL_URL` - Internal logging service URL (default: <http://logging-microservice:3367>)
 - `NOTIFICATION_SERVICE_URL` - Notification service URL
 - `AUTH_SERVICE_URL` - Authentication service URL
 
@@ -266,6 +266,22 @@ nano .env
 ./scripts/status.sh
 ```
 
+## 🔌 Port Configuration
+
+**Port Range**: 33xx (shared microservices)
+
+| Service | Host Port (Blue/Green) | Container Port | .env Variable | Description |
+|---------|----------------------|----------------|---------------|-------------|
+| **Payment Service** | `${PORT_BLUE:-3369}` / `${PORT_GREEN:-3369}` | `${SERVICE_PORT:-3468}` | `PORT_BLUE`, `PORT_GREEN`, `SERVICE_PORT` (payment-microservice/.env) | Payment processing service |
+
+**Note**:
+
+- All ports are configured in `payment-microservice/.env`. The values shown are defaults.
+- Blue and green deployments use the same host port (${PORT_BLUE:-3369} / ${PORT_GREEN:-3369}) - only one is active at a time
+- Container port (${SERVICE_PORT:-3468}) differs from host port for internal consistency
+- All ports are exposed on `127.0.0.1` only (localhost) for security
+- External access is provided via nginx-microservice reverse proxy at `https://payments.statex.cz`
+
 ## Access Methods
 
 ### Production Access (HTTPS)
@@ -278,7 +294,8 @@ curl https://payments.statex.cz/health
 
 ```bash
 # From within a container on nginx-network
-curl http://payment-microservice:3468/health
+# Port configured in payment-microservice/.env: SERVICE_PORT (default: 3468)
+curl http://payment-microservice:${SERVICE_PORT:-3468}/health
 ```
 
 ## Integration Example
@@ -315,7 +332,7 @@ The service uses a centralized logging system that integrates with the external 
 
 ### Logging Configuration
 
-- **External Logging**: Logs are sent to `http://logging-microservice:3268/api/logs`
+- **External Logging**: Logs are sent to `http://logging-microservice:${PORT:-3367}/api/logs` (port configured in `logging-microservice/.env`)
 - **Local Fallback**: If the logging service is unavailable, logs are written to local files in `./logs/` directory
 - **Service Name**: All logs are tagged with service name `payment-microservice`
 

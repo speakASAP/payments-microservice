@@ -24,11 +24,12 @@ async function bootstrap() {
     }),
   );
 
-  const port = process.env.SERVICE_PORT || process.env.PORT || 3468;
+  const port = parseInt(process.env.SERVICE_PORT || process.env.PORT || '3468', 10);
+  const host = process.env.SERVICE_HOST || 'localhost';
   await app.listen(port);
 
   // eslint-disable-next-line no-console
-  console.log(`Payment Microservice is running on: http://localhost:${port}`);
+  console.log(`Payment Microservice is running on: http://${host}:${port}`);
 }
 
 bootstrap();

@@ -23,8 +23,9 @@ export class StripeService implements PaymentProvider {
     private logger: LoggerService,
   ) {
     const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY') || '';
+    const apiVersion = this.configService.get<string>('STRIPE_API_VERSION') || '2023-10-16';
     this.stripe = new Stripe(secretKey, {
-      apiVersion: '2023-10-16',
+      apiVersion: apiVersion as any,
     });
   }
 

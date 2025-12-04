@@ -13,6 +13,10 @@ cd "$PROJECT_DIR"
 echo "🧪 Testing Payment Microservice"
 echo "=================================="
 
+# Load SERVICE_PORT from .env if available
+if [ -f .env ]; then
+  source .env
+fi
 SERVICE_PORT="${SERVICE_PORT:-3468}"
 BASE_URL="http://localhost:${SERVICE_PORT}"
 API_KEY="${API_KEY:-test-api-key}"

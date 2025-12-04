@@ -21,10 +21,15 @@ else
   exit 1
 fi
 
+# Load SERVICE_PORT from .env if available
+if [ -f .env ]; then
+  source .env
+fi
+SERVICE_PORT="${SERVICE_PORT:-3468}"
+
 # Check health endpoint
 echo ""
 echo "🏥 Health Check:"
-SERVICE_PORT="${SERVICE_PORT:-3468}"
 if docker exec payment-microservice wget --quiet --tries=1 --spider "http://localhost:${SERVICE_PORT}/health" 2>/dev/null; then
   echo "✅ Health endpoint is responding"
   docker exec payment-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health" | jq . 2>/dev/null || docker exec payment-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health"

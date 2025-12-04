@@ -31,9 +31,14 @@ docker compose up -d
 echo "⏳ Waiting for service to be ready..."
 sleep 5
 
+# Load SERVICE_PORT from .env if available
+if [ -f .env ]; then
+  source .env
+fi
+SERVICE_PORT="${SERVICE_PORT:-3468}"
+
 # Health check
 echo "🏥 Checking service health..."
-SERVICE_PORT="${SERVICE_PORT:-3468}"
 MAX_RETRIES=10
 RETRY_COUNT=0
 

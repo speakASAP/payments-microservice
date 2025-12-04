@@ -24,6 +24,9 @@ export class PayUService implements PaymentProvider {
   private readonly merchantId: string;
   private readonly sandbox: boolean;
   private readonly baseUrl: string;
+  private readonly apiPath: string;
+  private readonly oauthPath: string;
+  private readonly customerIp: string;
 
   constructor(
     private configService: ConfigService,
@@ -38,6 +41,9 @@ export class PayUService implements PaymentProvider {
     this.baseUrl = this.sandbox
       ? (this.configService.get<string>('PAYU_API_URL_SANDBOX') || 'https://secure.snd.payu.com')
       : (this.configService.get<string>('PAYU_API_URL_PRODUCTION') || 'https://secure.payu.com');
+    this.apiPath = this.configService.get<string>('PAYU_API_PATH') || '/api/v2_1';
+    this.oauthPath = this.configService.get<string>('PAYU_OAUTH_PATH') || '/pl/standard/user/oauth/authorize';
+    this.customerIp = this.configService.get<string>('PAYU_CUSTOMER_IP') || '127.0.0.1';
   }
 
   private generateSignature(params: Record<string, any>): string {
@@ -58,7 +64,7 @@ export class PayUService implements PaymentProvider {
 
       const paymentData = {
         notifyUrl: request.callbackUrl,
-        customerIp: '127.0.0.1',
+        customerIp: this.customerIp,
         merchantPosId: this.posId,
         description: `Payment for order ${request.orderId}`,
         currencyCode: request.currency,
@@ -86,7 +92,7 @@ export class PayUService implements PaymentProvider {
 
       const response = await firstValueFrom(
         this.httpService.post(
-          `${this.baseUrl}/api/v2_1/orders`,
+          `${this.baseUrl}${this.apiPath}/orders`,
           {
             ...paymentData,
             signature,
@@ -116,7 +122,7 @@ export class PayUService implements PaymentProvider {
     try {
       const response = await firstValueFrom(
         this.httpService.post(
-          `${this.baseUrl}/pl/standard/user/oauth/authorize`,
+          `${this.baseUrl}${this.oauthPath}`,
           new URLSearchParams({
             grant_type: 'client_credentials',
             client_id: this.clientId,
@@ -140,7 +146,7 @@ export class PayUService implements PaymentProvider {
     try {
       const accessToken = await this.getAccessToken();
       const response = await firstValueFrom(
-        this.httpService.get(`${this.baseUrl}/api/v2_1/orders/${providerTransactionId}`, {
+        this.httpService.get(`${this.baseUrl}${this.apiPath}/orders/${providerTransactionId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -170,7 +176,7 @@ export class PayUService implements PaymentProvider {
 
       const accessToken = await this.getAccessToken();
       const response = await firstValueFrom(
-        this.httpService.post(`${this.baseUrl}/api/v2_1/orders/${request.paymentId}/refund`, refundData, {
+        this.httpService.post(`${this.baseUrl}${this.apiPath}/orders/${request.paymentId}/refund`, refundData, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
