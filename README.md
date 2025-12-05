@@ -187,7 +187,7 @@ See `.env.example` for all required environment variable names (keys only, no va
 - `FRONTEND_URL` - Frontend URL
 - `CORS_ORIGIN` - CORS allowed origin
 - `LOGGING_SERVICE_URL` - External logging service URL
-- `LOGGING_SERVICE_INTERNAL_URL` - Internal logging service URL (default: <http://logging-microservice:3367>)
+- `LOGGING_SERVICE_INTERNAL_URL` - Internal logging service URL (default: `http://logging-microservice:${LOGGING_SERVICE_PORT:-3367}`, port configured in logging-microservice/.env)
 - `NOTIFICATION_SERVICE_URL` - Notification service URL
 - `AUTH_SERVICE_URL` - Authentication service URL
 
