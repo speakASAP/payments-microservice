@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: payment-microservice-blue
     ports:
-      - "127.0.0.1:${PORT_BLUE:-3369}:${SERVICE_PORT:-3468}"
+      - "${PORT_BLUE:-3369}:${SERVICE_PORT:-3468}"
     env_file:
       - .env
     environment:
