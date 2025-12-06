@@ -14,7 +14,7 @@ export class LoggerService implements NestLoggerService {
   private logDir: string;
   private loggingServiceUrl: string | undefined;
   private loggingServiceApiPath: string;
-  private readonly serviceName = 'payment-microservice';
+  private readonly serviceName = 'payments-microservice';
   private readonly httpTimeout = 5000; // 5 seconds
 
   constructor(

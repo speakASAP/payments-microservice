@@ -147,7 +147,7 @@ Returns service health status.
   "success": true,
   "status": "ok",
   "timestamp": "2025-01-01T00:00:00.000Z",
-  "service": "payment-microservice"
+  "service": "payments-microservice"
 }
 ```
 
@@ -272,11 +272,11 @@ nano .env
 
 | Service | Host Port (Blue/Green) | Container Port | .env Variable | Description |
 |---------|----------------------|----------------|---------------|-------------|
-| **Payment Service** | `${PORT_BLUE:-3369}` / `${PORT_GREEN:-3369}` | `${SERVICE_PORT:-3468}` | `PORT_BLUE`, `PORT_GREEN`, `SERVICE_PORT` (payment-microservice/.env) | Payment processing service |
+| **Payment Service** | `${PORT_BLUE:-3369}` / `${PORT_GREEN:-3369}` | `${SERVICE_PORT:-3468}` | `PORT_BLUE`, `PORT_GREEN`, `SERVICE_PORT` (payments-microservice/.env) | Payment processing service |
 
 **Note**:
 
-- All ports are configured in `payment-microservice/.env`. The values shown are defaults.
+- All ports are configured in `payments-microservice/.env`. The values shown are defaults.
 - Blue and green deployments use the same host port (${PORT_BLUE:-3369} / ${PORT_GREEN:-3369}) - only one is active at a time
 - Container port (${SERVICE_PORT:-3468}) differs from host port for internal consistency
 - All ports are exposed on `127.0.0.1` only (localhost) for security
@@ -294,8 +294,8 @@ curl https://payments.statex.cz/health
 
 ```bash
 # From within a container on nginx-network
-# Port configured in payment-microservice/.env: SERVICE_PORT (default: 3468)
-curl http://payment-microservice:${SERVICE_PORT:-3468}/health
+# Port configured in payments-microservice/.env: SERVICE_PORT (default: 3468)
+curl http://payments-microservice:${SERVICE_PORT:-3468}/health
 ```
 
 ## Integration Example
@@ -334,7 +334,7 @@ The service uses a centralized logging system that integrates with the external 
 
 - **External Logging**: Logs are sent to `http://logging-microservice:${PORT:-3367}/api/logs` (port configured in `logging-microservice/.env`)
 - **Local Fallback**: If the logging service is unavailable, logs are written to local files in `./logs/` directory
-- **Service Name**: All logs are tagged with service name `payment-microservice`
+- **Service Name**: All logs are tagged with service name `payments-microservice`
 
 ## Security
 

@@ -14,7 +14,7 @@ echo "📊 Payment Microservice Status"
 echo "=================================="
 
 # Check if container is running
-if docker ps | grep -q payment-microservice; then
+if docker ps | grep -q payments-microservice; then
   echo "✅ Container is running"
 else
   echo "❌ Container is not running"
@@ -30,9 +30,9 @@ SERVICE_PORT="${SERVICE_PORT:-3468}"
 # Check health endpoint
 echo ""
 echo "🏥 Health Check:"
-if docker exec payment-microservice wget --quiet --tries=1 --spider "http://localhost:${SERVICE_PORT}/health" 2>/dev/null; then
+if docker exec payments-microservice wget --quiet --tries=1 --spider "http://localhost:${SERVICE_PORT}/health" 2>/dev/null; then
   echo "✅ Health endpoint is responding"
-  docker exec payment-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health" | jq . 2>/dev/null || docker exec payment-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health"
+  docker exec payments-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health" | jq . 2>/dev/null || docker exec payments-microservice wget -qO- "http://localhost:${SERVICE_PORT}/health"
 else
   echo "❌ Health endpoint is not responding"
 fi

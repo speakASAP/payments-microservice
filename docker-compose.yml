@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: payment-microservice
+    container_name: payments-microservice
     ports:
       - "${PORT:-3369}:${SERVICE_PORT:-3468}"
     env_file:
@@ -21,7 +21,7 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOGGING_SERVICE_URL=${LOGGING_SERVICE_INTERNAL_URL:-http://logging-microservice:${LOGGING_SERVICE_PORT:-3367}}
     volumes:
-      - ${DOCKER_VOLUME_BASE_PATH:-/srv/storagebox/statex/docker-volumes}/payment-microservice/logs:/app/logs
+      - ${DOCKER_VOLUME_BASE_PATH:-/srv/storagebox/statex/docker-volumes}/payments-microservice/logs:/app/logs
     networks:
       - nginx-network
     restart: unless-stopped

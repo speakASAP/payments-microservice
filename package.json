@@ -1,5 +1,5 @@
 {
-  "name": "payment-microservice",
+  "name": "payments-microservice",
   "version": "1.0.0",
   "description": "Centralized payment service for Statex microservices ecosystem",
   "main": "dist/main.js",
