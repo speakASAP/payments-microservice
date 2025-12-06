@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { PaymentsModule } from './payments/payments.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { HealthController } from './health/health.controller';
+import { InfoController } from './info/info.controller';
 import { DatabaseModule } from '../shared/database/database.module';
 import { LoggerModule } from '../shared/logger/logger.module';
 
@@ -29,7 +30,7 @@ import { LoggerModule } from '../shared/logger/logger.module';
     PaymentsModule,
     WebhooksModule,
   ],
-  controllers: [HealthController],
+  controllers: [HealthController, InfoController],
   providers: [
     {
       provide: APP_GUARD,
